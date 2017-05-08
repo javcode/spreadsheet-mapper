@@ -1,0 +1,23 @@
+{
+  "name": "spreadsheet-mapper",
+  "description": "Frontend application to map Spreadsheet columns to business model",
+  "main": [
+    "js/app.js",
+    "css/app.css"
+  ],
+  "dependencies": {
+    "activix-double-scroll": "1.0.0",
+    "angular": "1.6.4",
+    "angular-js-xlsx": "0.0.2",
+    "angular-route": "1.6.4",
+    "bootstrap": "3.3.7",
+    "jquery": "3.2.1",
+    "js-xlsx": "3.2.2",
+    "lodash": "4.17.4"
+  },
+  "ignore": [
+    "bower_components"
+  ],
+  "private": true
+}
+

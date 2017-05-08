@@ -1,0 +1,19 @@
+<div class="container-fluid" ng-controller="mapperController">
+  <div class="form-input">
+    <label for="xlsreader">Upload an Excel file</label>
+    <js-xls id="xlsreader" onread="read" onerror="error"></js-xls>
+  </div>
+
+  <hr />
+
+  <div id="excelPanel" ng-show="workbook" ng-include="'partials/workbook.html'">
+  </div>
+
+  <div id="outputPanel" ng-show="outputFile">
+    <div class="form-group">
+      <label for="outputFile">Properties file:</label>
+      <textarea class="form-control" rows="10" name="outputFile">{{outputFile}}</textarea>
+    </div>
+    <button ng-click="downloadPropertiesFile()">Download</button>
+  </div>
+</div>

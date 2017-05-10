@@ -22,7 +22,7 @@
               <th ng-repeat="columnIndex in loopRange(1, sheet.maxColumns)">
                 
                 <select ng-model="sheets[sheet.title]['mappings'][columnIndex].value" ng-change="apply()">
-                  <option selected value="">Please select mapping</option>
+                  <option selected value="">Select mapping...</option>
                   <option ng-repeat="column in columns" value="{{column.key}}">{{column.value}}</option>
                 </select>
                 <div ng-show="showMetadata(sheet.title, columnIndex)">

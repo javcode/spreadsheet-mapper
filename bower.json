@@ -18,5 +18,9 @@
   "ignore": [
     "bower_components"
   ],
-  "private": true
+  "private": true,
+  "resolutions": {
+    "js-xlsx": "0.9.12",
+    "angular": "1.6.4"
+  }
 }

@@ -108,11 +108,6 @@ angular.module('xlsMapperApplication').controller('mapperController', function($
     var mappings = map(sheet.mappings);
     var sheetData = _.find($scope.workbook.sheets, { title: sheetName}).data;
 
-    var memos = mappings.memo && mappings.memo.length ? 
-      _.map(mappings.memo, 'index') : _.get(mappings, 'memo.index');
-    var bankComments = mappings.bankComment && mappings.bankComment.length ? 
-      _.map(mappings.bankComment, 'index') : _.get(mappings, 'bankComment.index');
-
     var properties = {
       parser: $scope.generalMapping.parser,
       template: $scope.generalMapping.parser + '_' + _.isNil($scope.generalMapping.template) ? '' : $scope.generalMapping.template,
@@ -168,7 +163,15 @@ angular.module('xlsMapperApplication').controller('mapperController', function($
   $scope.downloadPropertiesFile = function() {
     var binaryFile = btoa(unescape(encodeURIComponent($scope.outputFile)));
     var inlineDataFile = "data:application/octet-stream;charset=utf-8;base64," + binaryFile;
-    window.open(inlineDataFile);
+
+    var downloadLink = document.createElement("a");
+    downloadLink.href = inlineDataFile;
+    downloadLink.download = ($scope.generalMapping.bank ? $scope.generalMapping.bank : new Date().getTime())
+      + '.properties';
+
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
   }
 
   $scope.startCellSelection = function(action) {

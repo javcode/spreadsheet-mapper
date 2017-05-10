@@ -5,6 +5,7 @@ angular.module('xlsMapperApplication').controller('mapperController', function($
   }
   $scope.sheets = [];
   $scope.columns = propertiesMapper.mappingColumns;
+  $scope.pendingAction = null;
 
   $scope.apply = function() {
     safeApply($scope);
@@ -45,7 +46,6 @@ angular.module('xlsMapperApplication').controller('mapperController', function($
     });
     if(table.sheets.length > 0) {
       $scope.workbook = table;
-      console.log(table)
       safeApply($scope);
       $(".sheets-doublescroll").doubleScroll();
     }
@@ -53,7 +53,7 @@ angular.module('xlsMapperApplication').controller('mapperController', function($
 
   $scope.showMetadata = function(sheetTitle, columnIndex) {
     var columnMapped = _.get($scope.sheets, sheetTitle + '.mappings.' + columnIndex + '.value');
-    if(_.isNil(columnMapped)) {
+    if(_.isNil(columnMapped) || _.isEmpty(columnMapped)) {
       return false;
     } else {
       var column = _.find($scope.columns, { key: columnMapped });
@@ -63,7 +63,7 @@ angular.module('xlsMapperApplication').controller('mapperController', function($
 
   $scope.getMetadata = function(sheetTitle, columnIndex) {
     var columnMapped = _.get($scope.sheets, sheetTitle + '.mappings.' + columnIndex + '.value');
-    if(_.isNil(columnMapped)) {
+    if(_.isNil(columnMapped) || _.isEmpty(columnMapped)) {
       return {}
     } else {
       var column = _.find($scope.columns, { key: columnMapped });
@@ -115,73 +115,32 @@ angular.module('xlsMapperApplication').controller('mapperController', function($
 
     var properties = {
       parser: $scope.generalMapping.parser,
-      template: $scope.generalMapping.parser + '_' + $scope.generalMapping.template,
+      template: $scope.generalMapping.parser + '_' + _.isNil($scope.generalMapping.template) ? '' : $scope.generalMapping.template,
       header: sheetData[sheet.headerRow].join(','),
       summary: {
         le: {
-          account: 'asd',
-          name: 'asd'
+          account: sheet['summary.le.account'],
+          name: sheet['summary.le.name']
         },
-        currency: 'asd'
-      },
-      trx: {
-        date: {
-          position: _.get(mappings, 'txDate.index,'),
-          format: _.get(mappings, 'txDate.metadata')
-        },
-        time: {
-          position: _.get(mappings, 'txTime.index,'),
-          format: _.get(mappings, 'txTime.metadata')
-        },
-        number: {
-          position: _.get(mappings, 'txNumber.index')
-        }
-      },
-      dr: {
-        amount: {
-          position: _.get(mappings, 'drAmount.index')
-        },
-        flag: {
-          position: _.get(mappings, 'drAmount.metadata')
-        }
-      },
-      cr: {
-        amount: {
-          position: _.get(mappings, 'crAmount.index')
-        },
-        flag: {
-          position: _.get(mappings, 'crAmount.metadata')
-        }
-      },
-      balance: {
-        amount: {
-          position: _.get(mappings, 'balance.index')
-        }
-      },
-      customer: {
-        account: {
-          position: _.get(mappings, 'customerAccount.index')
-        },
-        name: {
-          position: _.get(mappings, 'customerNumber.index')
-        }
-      },
-      cash: {
-        type: {
-          position: _.get(mappings, 'cashType.index')
-        }
-      },
-      user: {
-        memo: {
-          positions: memos
-        }
-      },
-      bank: {
-        comment: {
-          positions: bankComments
+        currency: sheet['summary.currency']
+      }
+    };
+
+    _.each(propertiesMapper.mappingColumns, function(column) {
+      var value = mappings[column.key];
+      if(value) {
+        if(_.isArray(value)) {
+          var arrayOfValues = _.map(value, 'index').join(',');
+          _.set(properties, column.key, arrayOfValues);
+        } else {
+          _.set(properties, column.key, value.index);
+          if(column.metadata) {
+            _.set(properties, column.metadata.key, value.metadata);          
+          }
         }
       }
-    }
+    });
+
     return properties;
   }
 
@@ -208,9 +167,33 @@ angular.module('xlsMapperApplication').controller('mapperController', function($
 
   $scope.downloadPropertiesFile = function() {
     var binaryFile = btoa(unescape(encodeURIComponent($scope.outputFile)));
-    //var binaryFile = btoa($scope.outputFile);
     var inlineDataFile = "data:application/octet-stream;charset=utf-8;base64," + binaryFile;
     window.open(inlineDataFile);
+  }
+
+  $scope.startCellSelection = function(action) {
+    $scope.pendingAction = action;
+    safeApply($scope);
+  }
+
+  $scope.selectCell = function(sheetTitle, cellValue, column) {
+    if($scope.pendingAction) {
+      $scope.sheets[sheetTitle][$scope.pendingAction] = '|' + cellValue + '|' + toColumnName(column + 1);
+      $scope.pendingAction = null;
+      safeApply($scope);
+    }
+  }
+
+  /**
+   * Takes a positive integer and returns the corresponding column name.
+   * @param {number} num  The positive integer to convert to a column name.
+   * @return {string}  The column name.
+   */
+  function toColumnName(num) {
+    for (var ret = '', a = 1, b = 26; (num -= a) >= 0; a = b, b *= 26) {
+      ret = String.fromCharCode(parseInt((num % b) / a) + 65) + ret;
+    }
+    return ret;
   }
 
 });

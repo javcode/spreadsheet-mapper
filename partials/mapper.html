@@ -1,9 +1,43 @@
 <div class="container-fluid" ng-controller="mapperController">
-  <div class="form-input">
-    <label for="xlsreader">Upload an Excel file</label>
-    <js-xls id="xlsreader" onread="read" onerror="error"></js-xls>
-  </div>
+  <div class="row">
 
+    <div class="col-md-6" ng-hide="workbook">
+      <div class="form-input">
+        <label for="xlsreader">Upload an Excel file</label>
+        <js-xls id="xlsreader" onread="read" onerror="error"></js-xls>
+      </div>
+    </div>
+
+    <div class="col-md-6" ng-show="workbook">
+      <h3>Pick another file</h3>
+      <button class="btn btn-primary" ng-click="workbook = null">Restart</button>
+    </div>
+
+    <div class="col-md-6" ng-show="workbook">
+      <div id="general-mapping" class="row">
+        <div class="form-input">
+          <label for="bank">Bank</label>
+          <input type="text" class="form-control" ng-model="generalMapping.bank" name="bank" required/>
+          <p ng-show="isTouchedAndInvalid(generalMapping.bank)" class="help-block">Bank is required.</p>
+        </div>
+        <div class="form-input">
+          <label for="parser">Parser</label>
+          <input type="text" class="form-control" ng-model="generalMapping.parser" name="parser" required/>
+          <p ng-show="isTouchedAndInvalid(generalMapping.parser)" class="help-block">Parser is required.</p>
+        </div>
+        <div class="form-input" ng-show="generalMapping.parser">
+          <label for="template">Template</label>
+          <div class="input-group">
+            <span class="input-group-addon" id="template-prefix">{{generalMapping.parser}}_</span>
+            <input type="text" class="form-control" ng-model="generalMapping.template" name="template" aria-describedby="template-prefix">
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+  
   <hr />
 
   <div id="excelPanel" ng-show="workbook" ng-include="'partials/workbook.html'">
@@ -14,6 +48,6 @@
       <label for="outputFile">Properties file:</label>
       <textarea class="form-control" rows="10" name="outputFile">{{outputFile}}</textarea>
     </div>
-    <button ng-click="downloadPropertiesFile()">Download</button>
+    <button class="btn btn-primary" ng-click="downloadPropertiesFile()">Download</button>
   </div>
 </div>

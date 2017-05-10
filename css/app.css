@@ -5,7 +5,7 @@ body {
 .table-fixed tbody {
     display:block;
     height:400px;
-    overflow:auto;
+    overflow: scroll;
 }
 .table-fixed thead,.table-fixed  tbody tr {
     display:table;
@@ -13,5 +13,24 @@ body {
     table-layout:fixed;
 }
 .table-fixed thead tr th{
-    width: 200px;
+    width: 200px !important;
+}
+
+.table-fixed tbody tr td{
+    width: 200px !important;
+    word-wrap: break-word;
+}
+
+.table-fixed thead tr th:first-child,
+.table-fixed tbody tr td:first-child {
+  width: 100px !important;
+}
+
+.table-fixed thead tr th:last-child {
+  width: 216px !important; /* Scroll Bar misplacement fix */
+}
+
+.selectable-cell:hover {
+  cursor: pointer;
+  background: #d8c2ff !important;
 }

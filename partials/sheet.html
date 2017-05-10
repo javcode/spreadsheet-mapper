@@ -1,4 +1,4 @@
- <form name="sheetForm" ng-submit="createMappinsFile(sheet.title)" novalidate>
+ <form name="sheetForm" novalidate>
   <div class="panel-heading">
     <h4 class="panel-title">
       <a data-toggle="collapse" data-parent="#workbookAccordion" data-target="#collapse{{$index}}">
@@ -9,23 +9,20 @@
 
   <div id="collapse{{$index}}" class="panel-collapse collapse {{$index == 0 ? 'in' : ''}}">
     <div class="panel-body" ng-model="sheets[sheet.title]">
-      <div class="form-input">
-        <label for="header">Header Row #</label>
-        <input type="number" class="form-control" ng-model="sheets[sheet.title]['headerRow']" name="header" required
-          min="0" max="{{sheet.data.length ? sheet.data.length - 1 : 0}}"/>
-          <p ng-show="isTouchedAndInvalid(sheets[sheet.title]['headerRow'])" class="help-block">Header row is required.</p>
-      </div>
+
+      <div class="row" ng-include="'partials/sheet-general-data.html'"/>
 
       <hr />
 
       <div class="table-responsive sheets-doublescroll">
-        <table class="table table-striped table-bordered table-fixed">
+        <table class="table table-striped table-bordered table-fixed" data-toggle="table" data-fixed-columns="true" data-fixed-number="2">
           <thead>
             <tr>
-              <th ng-repeat="columnIndex in loopRange(0, sheet.maxColumns - 1)">
+              <th>Header Row</th>
+              <th ng-repeat="columnIndex in loopRange(1, sheet.maxColumns)">
                 
                 <select ng-model="sheets[sheet.title]['mappings'][columnIndex].value" ng-change="apply()">
-                  <option selected disabled>Please select mapping</option>
+                  <option selected value="">Please select mapping</option>
                   <option ng-repeat="column in columns" value="{{column.key}}">{{column.value}}</option>
                 </select>
                 <div ng-show="showMetadata(sheet.title, columnIndex)">
@@ -41,17 +38,21 @@
           </thead>
           <tbody>
             <tr ng-repeat="row in sheet.data track by $index" 
-              class="{{sheets[sheet.title]['headerRow'] == $index ? 'info' : ''}}"
-              ng-click="sheets[sheet.title]['headerRow'] = $index" style="cursor: pointer;">
-              <td ng-repeat="col in row track by $index">{{col}}</td>
-              <td ng-if="row.length < sheet.maxColumns" ng-repeat="n in loopRange(row.length, sheet.maxColumns - 1)" >&nbsp;</td>
+              class="{{sheets[sheet.title]['headerRow'] == $index ? 'info' : ''}}">
+              <td>
+                <button type="button" class="btn btn-primary" name="headerradio" ng-click="sheets[sheet.title]['headerRow'] = $index">
+                  Header
+                </button>
+              </td>
+              <td ng-repeat="col in row track by $index" class="{{pendingAction ? 'selectable-cell':''}}" ng-click="selectCell(sheet.title, col, $index)">{{col}}</td>
+              <td ng-if="row.length < sheet.maxColumns" ng-repeat="n in loopRange(row.length + 1, sheet.maxColumns)" >&nbsp;</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
     <div class="panel-footer">
-      <button type="submit" class="btn btn-primary">Create Mappings</button>
+      <button type="button" ng-click="createMappinsFile(sheet.title)" class="btn btn-primary">Create Mappings</button>
     </div>
   </div>
 </form>

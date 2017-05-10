@@ -1,0 +1,48 @@
+<div class="container-fluid">
+  <div class="col-md-6">
+    <div class="form-input">
+      <label for="header">Header Row #</label>
+      <input type="number" class="form-control" ng-model="sheets[sheet.title]['headerRow']" name="header" required
+        min="0" max="{{sheet.data.length ? sheet.data.length - 1 : 0}}"/>
+        <p ng-show="isTouchedAndInvalid(sheets[sheet.title]['headerRow'])" class="help-block">Header row is required.</p>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-input">
+      <div class="col-md-5">
+        <label for="summary.le.account">Summary LE Account Cell</label>
+      </div>
+      <div class="col-md-4">
+        <input type="text" readonly ng-model="sheets[sheet.title]['summary.le.account']" class="form-control"/>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-primary" ng-hide="sheets[sheet.title]['summary.le.account']" name="summary.le.account" ng-click="startCellSelection('summary.le.account')">Select</button>
+        <button class="btn btn-primary" ng-show="sheets[sheet.title]['summary.le.account']" ng-click="sheets[sheet.title]['summary.le.account'] = null">Unselect</button>
+      </div>
+    </div>
+    <div class="form-input">
+      <div class="col-md-5">
+        <label for="summary.le.name">Summary LE Name Cell</label>
+      </div>
+      <div class="col-md-4">
+        <input type="text" readonly ng-model="sheets[sheet.title]['summary.le.name']" class="form-control"/>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-primary" ng-hide="sheets[sheet.title]['summary.le.name']" name="summary.le.name" ng-click="startCellSelection('summary.le.name')">Select</button>
+        <button class="btn btn-primary" ng-show="sheets[sheet.title]['summary.le.name']" ng-click="sheets[sheet.title]['summary.le.name'] = null">Unselect</button>
+      </div>
+    </div>
+    <div class="form-input">
+      <div class="col-md-5">
+        <label for="summary.currency">Summary Currency Cell</label>
+      </div>
+      <div class="col-md-4">
+        <input type="text" readonly ng-model="sheets[sheet.title]['summary.currency']" class="form-control"/>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-primary" ng-hide="sheets[sheet.title]['summary.currency']" name="summary.currency" ng-click="startCellSelection('summary.currency')">Select</button>
+        <button class="btn btn-primary" ng-show="sheets[sheet.title]['summary.currency']" ng-click="sheets[sheet.title]['summary.currency'] = null">Unselect</button>
+      </div>
+    </div>
+  </div>
+</div>

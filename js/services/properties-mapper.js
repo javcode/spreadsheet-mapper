@@ -20,63 +20,67 @@ angular.module('xlsMapperApplication').factory('propertiesMapper', [function($ro
   }
 
   var mappingColumns = [{
-    key: "txDate",
+    key: "trx.date.position",
     value: "Transaction Date",
     metadata: {
       label: 'Date format',
-      type: 'text'
+      type: 'text',
+      key: 'trx.date.format'
     }
   },
   {
-    key: "txTime",
+    key: "trx.time.position",
     value: "Transaction Time",
     metadata: {
       label: 'Date format',
-      type: 'text'
+      type: 'text',
+      key: 'trx.time.format'
     }
   },
   {
-    key: "txNumber",
+    key: "trx.number.position",
     value: "Transaction number"
   },
   {
-    key: "drAmount",
+    key: "dr.amount.position",
     value: "Debit amount",
     metadata: {
       label: 'DR Flag position',
-      type: 'text'
+      type: 'text',
+      key: 'dr.flag.position'
     }
   },
   {
-    key: "crAmount",
+    key: "cr.amount.position",
     value: "Credit amount",
     metadata: {
       label: 'DR Flag position',
-      type: 'text'
+      type: 'text',
+      key: 'cr.flag.position'
     }
   },
   {
-    key: "balance",
+    key: "balance.amount.position",
     value: "Balance Amount"
   },
   {
-    key: "customerAccount",
+    key: "customer.account.position",
     value: "Customer Account"
   },
   {
-    key: "customerNumber",
-    value: "Customer Number"
+    key: "customer.name.position",
+    value: "Customer Name"
   },
   {
-    key: "cashType",
+    key: "cash.type.position",
     value: "Cash type"
   },
   {
-    key: "memo",
+    key: "user.memo.positions",
     value: "User Memo"
   },
   {
-    key: "bankComment",
+    key: "bank.comment.positions",
     value: "Bank Comment"
   }];
 
